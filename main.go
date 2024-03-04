@@ -1,16 +1,20 @@
 package main
 
 import (
+	"crypto/sha256"
 	"fmt"
-
-	"github.com/minjoo0729/pencoin/person"
 )
 
-func main() {
-	mj := person.Person{}
-	mj.SetDetails("minjoo", 23)
-	fmt.Println("Main : ", mj)
+type block struct {
+	data     string
+	hash     string
+	prevHash string
 }
 
-// Method :  &{minjoo 23}
-// Main :  {minjoo 23}
+func main() {
+	genesisBlock := block{"Genesis Block", "", ""}
+	hash := sha256.Sum256([]byte(genesisBlock.data + genesisBlock.prevHash))
+	hexHash := fmt.Sprintf("%x", hash)
+	genesisBlock.hash = hexHash
+	fmt.Println(genesisBlock)
+}
