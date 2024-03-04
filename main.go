@@ -1,7 +1,16 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/minjoo0729/pencoin/person"
+)
 
 func main() {
-	fmt.Println("Hello World!")
+	mj := person.Person{}
+	mj.SetDetails("minjoo", 23)
+	fmt.Println("Main : ", mj)
 }
+
+// Method :  {minjoo 23}
+// Main :  { 0}
