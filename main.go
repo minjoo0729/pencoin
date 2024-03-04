@@ -12,5 +12,5 @@ func main() {
 	fmt.Println("Main : ", mj)
 }
 
-// Method :  {minjoo 23}
-// Main :  { 0}
+// Method :  &{minjoo 23}
+// Main :  {minjoo 23}
