@@ -9,7 +9,11 @@ import (
 	"github.com/minjoo0729/pencoin/blockchain"
 )
 
-const port string = ":4000"
+const (
+	port string = ":4000"
+	templateDir string = "templates/"
+)
+var templates *template.Template
 
 type homeData struct {
 	UserName string
@@ -17,12 +21,13 @@ type homeData struct {
 }
 
 func home(rw http.ResponseWriter, r *http.Request) {
-	tmpl := template.Must(template.ParseFiles("./templates/pages/home.gohtml"))
 	data := homeData{"Minjoo", blockchain.GetBlockchain().AllBlocks()}
-	tmpl.Execute(rw, data)
+	templates.ExecuteTemplate(rw, "home", data)
 }
 
 func main() {
+	templates = template.Must(template.ParseGlob(templateDir + "pages/*.gohtml"))
+	templates = template.Must(templates.ParseGlob(templateDir + "partials/*.gohtml"))
 	http.HandleFunc("/", home)
 	fmt.Printf("Listening on http://localhost%s\n", port)
 	log.Fatal(http.ListenAndServe(port, nil))
