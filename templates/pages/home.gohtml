@@ -2,12 +2,12 @@
 
 <!DOCTYPE html>
 <html lang="en">
-    {{template "head"}}
+    {{template "head" .UserName}}
 <body>
-    {{template "header"}}
+    {{template "header" .UserName}}
     <main>
         {{range .Blocks}}
-            {{template "block"}}
+            {{template "block" .}}
         {{end}}
     </main>
     {{template "footer"}}
