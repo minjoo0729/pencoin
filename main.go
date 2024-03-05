@@ -5,29 +5,43 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-
-	"github.com/minjoo0729/pencoin/utils"
 )
 
 const port string = ":4000"
 
+type URL string
+
+func (u URL) MarshalText() ([]byte, error) {
+	url := fmt.Sprintf("http://localhost%s%s", port, u)
+	return []byte(url), nil
+}
+
 type URLDescription struct {
-	URL         string
-	Method      string
-	Description string
+	URL         URL `json:"url"`
+	Method      string `json:"method"`
+	Description string `json:"description"`
+	Payload     string `json:"payload,omitempty"`
 }
 
 func documentation(rw http.ResponseWriter, r *http.Request) {
 	data := []URLDescription{
 		{
-			URL:         "/",
+			URL:         URL("/"),
 			Method:      "GET",
 			Description: "See Documentation",
 		},
+		{
+			URL:         URL("/blocks"),
+			Method:      "POST",
+			Description: "Add A Block data",
+		},
 	}
-	b, err := json.Marshal(data)
-	utils.HandleErr(err)
-	fmt.Printf("%s\n", b)
+	rw.Header().Add("Content-Type", "application/json")
+	json.NewEncoder(rw).Encode(data)
+}
+
+func (u URLDescription) String() string {
+	return "Hello I'm the URL Description"
 }
 
 func main() {
