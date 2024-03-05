@@ -1,11 +1,15 @@
 package blockchain
 
-import "sync"
+import (
+	"crypto/sha256"
+	"fmt"
+	"sync"
+)
 
 type block struct {
-	data     string
-	hash     string
-	prevHash string
+	Data     string
+	Hash     string
+	PrevHash string
 }
 
 type blockchain struct {
@@ -15,16 +19,27 @@ type blockchain struct {
 var b *blockchain
 var once sync.Once
 
+func (b *block) calculateHash() {
+	Hash := sha256.Sum256([]byte(b.Data + b.PrevHash))
+	b.Hash = fmt.Sprintf("%x", Hash)
+}
+
 func getLastHash() string {
 	totalBlocks := len(GetBlockchain().blocks)
 	if totalBlocks == 0 {
 		return ""
 	}
-	return GetBlockchain().blocks[totalBlocks - 1].hash
+	return GetBlockchain().blocks[totalBlocks - 1].Hash
 }
 
 func createBlock(data string) *block {
 	newBlock := block{data, "", getLastHash()}
+	newBlock.calculateHash()
+	return &newBlock
+}
+
+func (b *blockchain) AddBlock(data string) {
+	b.blocks = append(b.blocks, createBlock(data))
 }
 
 func GetBlockchain() *blockchain {
@@ -35,4 +50,8 @@ func GetBlockchain() *blockchain {
 		})
 	}
 	return b
+}
+
+func (b *blockchain) AllBlocks() []*block {
+	return b.blocks
 }
