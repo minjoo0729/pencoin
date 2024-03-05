@@ -2,14 +2,24 @@ package main
 
 import (
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
+
+	"github.com/minjoo0729/pencoin/blockchain"
 )
 
 const port string = ":4000"
 
+type homeData struct {
+	UserName string
+	Blocks   []*blockchain.Block
+}
+
 func home(rw http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(rw, "Hello from home!")
+	tmpl := template.Must(template.ParseFiles("./templates/home.html"))
+	data := homeData{"Minjoo", blockchain.GetBlockchain().AllBlocks()}
+	tmpl.Execute(rw, data)
 }
 
 func main() {
