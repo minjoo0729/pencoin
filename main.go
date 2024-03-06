@@ -1,12 +1,13 @@
 package main
 
 import (
-	explorer "github.com/minjoo0729/pencoin/explorer/templates"
+	"fmt"
+
 	"github.com/minjoo0729/pencoin/rest"
 )
 
 
 func main() {
-	go explorer.Start(3000)
+	fmt.Println("Starting the server")
 	rest.Start(4000)
 }
